@@ -14,7 +14,8 @@
 #define OUT_BLOCK 32768
 #define IN_BLOCK  16384
 
-@interface GZipInputData : NSObject<InputDataSource> {
+@interface GZipInputData : NSObject<InputDataSource>
+{
 	z_stream _stream;
 	BOOL _eoz; //end of (un)zip
 	
@@ -24,6 +25,6 @@
 	uint32_t _outOffset;
 }
 
--(id)initWithDataSource:(id<InputDataSource>)zippedSource;
+- (id)initWithDataSource:(id<InputDataSource>)zippedSource;
 
 @end

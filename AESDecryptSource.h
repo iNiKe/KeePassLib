@@ -27,7 +27,7 @@
 	BOOL _eof;
 }
 
-@property(nonatomic, retain) id<InputDataSource> _source;
+@property(nonatomic, strong) id<InputDataSource> _source;
 
 -(id)initWithInputSource:(id<InputDataSource>)source Keys:(uint8_t *)keys andIV:(uint8_t *)iv;
 @end

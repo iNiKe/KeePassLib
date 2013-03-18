@@ -33,6 +33,7 @@
 #define T_GROUP "Group"
 #define T_HISTORY "History"
 #define T_ICONID "IconID"
+#define T_ICON "Icon"
 #define T_ISEXPANDED "IsExpanded"
 #define T_KEEPASSFILE "KeePassFile"
 #define T_KEY "Key"
@@ -64,9 +65,11 @@
 #define T_USAGECOUNT "UsageCount"
 #define T_VALUE "Value"
 #define T_WINDOW "Window"
+#define T_BINARY "Binary"
 
-@interface Node : NSObject {
-	Node * _parent;
+@interface Node : NSObject
+{
+	Node *_parent;
 	NSMutableArray * _children;
 	//xml properties
 	NSMutableDictionary * _attributes;
@@ -74,17 +77,18 @@
 	NSString * _name;
 }
 
-@property(nonatomic, retain) Node * _parent;
-@property(nonatomic, retain) NSMutableString * _text;
-@property(nonatomic, retain) NSString * _name;
-@property(nonatomic, readonly, getter=_children) NSArray * _children;
-@property(nonatomic, readonly, getter=_attributes) NSDictionary * _attributes;
+@property(nonatomic, strong) Node * _parent;
+@property(nonatomic, strong) NSMutableString * _text;
+@property(nonatomic, strong) NSString * _name;
+@property(weak, nonatomic, readonly, getter=_children) NSArray * _children;
+@property(weak, nonatomic, readonly, getter=_attributes) NSDictionary * _attributes;
 
--(id)initWithUTF8Name:(uint8_t *)name;
--(id)initWithStringName:(NSString *)name;
--(void)addChild:(Node *) child;
--(void)removeChild:(Node *) child;
--(void)addAttribute:(NSString *)key value:(NSString *)value;
--(void)breakCyclcReference;
--(void)postProcess:(id<RandomStream>)rs; //
+- (id)initWithUTF8Name:(uint8_t *)name;
+- (id)initWithStringName:(NSString *)name;
+- (void)addChild:(Node *) child;
+- (void)removeChild:(Node *) child;
+- (void)addAttribute:(NSString *)key value:(NSString *)value;
+- (void)breakCyclcReference;
+- (void)postProcess:(id<RandomStream>)rs; //
+
 @end

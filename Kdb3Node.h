@@ -37,32 +37,34 @@
 
 @property(nonatomic, assign) uint32_t _id;
 @property(nonatomic, assign) uint32_t _image;
-@property(nonatomic, retain, getter=getGroupName, setter=setGroupName) NSString * _title;
-@property(nonatomic, retain, getter=getParent, setter=setParent) Kdb3Group * _parent;
+@property(nonatomic, strong, getter=getGroupName, setter=setGroupName:) NSString * _title;
+@property(nonatomic, strong, getter=getParent, setter=setParent:) Kdb3Group * _parent;
 @property(nonatomic, readonly, getter=getSubGroups) NSArray * _subGroups; 
 @property(nonatomic, readonly, getter=getEntries) NSArray * _entries;
 @property(nonatomic, readonly)NSArray * _metaEntries;
 @property(nonatomic, assign) uint32_t _flags;
 
--(uint8_t *)getCreation;
--(uint8_t *)getLastMod;
--(uint8_t *)getLastAccess;
--(uint8_t *)getExpiry;
+- (UIImage *)getIcon;
+- (uint8_t *)getCreation;
+- (uint8_t *)getLastMod;
+- (uint8_t *)getLastAccess;
+- (uint8_t *)getExpiry;
 
--(void)setCreation:(NSDate *) date;
--(void)setLastMod:(NSDate *) date;
--(void)setLastAccess:(NSDate *) date;
--(void)setExpiry:(NSDate *) date;
+- (void)setCreation:(NSDate *) date;
+- (void)setLastMod:(NSDate *) date;
+- (void)setLastAccess:(NSDate *) date;
+- (void)setExpiry:(NSDate *) date;
 
 //break cyclic references
--(void)breakCyclcReference;
+- (void)breakCyclcReference;
 @end
 
 
 ////
 //// Kdb3Entry
 ////
-@interface Kdb3Entry : NSObject<KdbEntry>{
+@interface Kdb3Entry : NSObject<KdbEntry>
+{
 	UUID * _uuid;
 
 	uint32_t _image;
@@ -82,36 +84,37 @@
 	uint32_t _binarySize;
 	id<BinaryContainer> _binary;
 }
-@property(nonatomic, retain) UUID * _uuid;
+@property(nonatomic, strong) UUID * _uuid;
 @property(nonatomic, assign) uint32_t _image;
 @property(nonatomic, assign) uint32_t _binarySize;
-@property(nonatomic, retain, getter=getParent, setter=setParent) Kdb3Group * _parent;
-@property(nonatomic, retain, getter=getEntryName, setter=setEntryName) NSString * _title;
-@property(nonatomic, retain, getter=getUserName, setter=setUserName) NSString * _username;
-@property(nonatomic, retain, getter=getPassword, setter=setPassword) NSString * _password;
-@property(nonatomic, retain, getter=getComments, setter=setComments) NSString * _comment;
-@property(nonatomic, retain) NSString * _binaryDesc;
-@property(nonatomic, retain, getter=getURL, setter=setURL) NSString * _url;
-@property(nonatomic, retain) id<BinaryContainer> _binary;
+@property(nonatomic, strong, getter=getParent, setter=setParent:) Kdb3Group * _parent;
+@property(nonatomic, strong, getter=getEntryName, setter=setEntryName:) NSString * _title;
+@property(nonatomic, strong, getter=getUserName, setter=setUserName:) NSString * _username;
+@property(nonatomic, strong, getter=getPassword, setter=setPassword:) NSString * _password;
+@property(nonatomic, strong, getter=getComments, setter=setComments:) NSString * _comment;
+@property(nonatomic, strong) NSString * _binaryDesc;
+@property(nonatomic, strong, getter=getURL, setter=setURL:) NSString * _url;
+@property(nonatomic, strong) id<BinaryContainer> _binary;
 
--(uint8_t *)getCreation;
--(uint8_t *)getLastMod;
--(uint8_t *)getLastAccess;
--(uint8_t *)getExpiry;
+- (UIImage *)getIcon;
+- (uint8_t *)getCreation;
+- (uint8_t *)getLastMod;
+- (uint8_t *)getLastAccess;
+- (uint8_t *)getExpiry;
 
--(void)setCreation:(NSDate *) date;
--(void)setLastMod:(NSDate *) date;
--(void)setLastAccess:(NSDate *) date;
--(void)setExpiry:(NSDate *) date;
+- (void)setCreation:(NSDate *)date;
+- (void)setLastMod:(NSDate *)date;
+- (void)setLastAccess:(NSDate *)date;
+- (void)setExpiry:(NSDate *)date;
 
--(NSUInteger)getNumberOfCustomAttributes;
--(NSString *)getCustomAttributeName:(NSUInteger) index;
--(NSString *)getCustomAttributeValue:(NSUInteger) index;
+- (NSUInteger)getNumberOfCustomAttributes;
+- (NSString *)getCustomAttributeName:(NSUInteger)index;
+- (NSString *)getCustomAttributeValue:(NSUInteger)index;
 
--(BOOL)isMeta;
--(void)breakCyclcReference;
+- (BOOL)isMeta;
+- (void)breakCyclcReference;
 
--(id)initWithNewUUID;
+- (id)initWithNewUUID;
 
 @end
 
@@ -119,7 +122,7 @@
 @interface Kdb3Tree : NSObject<KdbTree>{
 	id<KdbGroup> _root;
 }
-@property(nonatomic, retain, getter=getRoot, setter=setRoot) id<KdbGroup> _root;
+@property(nonatomic, strong, getter=getRoot, setter=setRoot:) id<KdbGroup> _root;
 
 //create a new Kdb3 tree
 +(id<KdbTree>)newTree;

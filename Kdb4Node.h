@@ -11,7 +11,8 @@
 #import "Kdb.h"
 #import "Tree.h"
 
-@interface Kdb4Group : Node<KdbGroup> {
+@interface Kdb4Group : Node<KdbGroup>
+{
 	NSString * _uuid;
 	uint32_t _image;
 	NSString * _title;
@@ -20,17 +21,18 @@
 	NSMutableArray * _entries;
 }
 
-@property(nonatomic, retain) NSString * _uuid;
+@property(nonatomic, strong) NSString * _uuid;
 @property(nonatomic, assign) uint32_t _image;
-@property(nonatomic, retain, getter=getGroupName, setter=setGroupName) NSString * _title;
-@property(nonatomic, retain) NSString * _comment;
-@property(nonatomic, retain, getter=getSubGroups) NSMutableArray * _subGroups;
-@property(nonatomic, retain, getter=getEntries) NSMutableArray * _entries;
+@property(nonatomic, strong, getter=getGroupName, setter=setGroupName:) NSString * _title;
+@property(nonatomic, strong) NSString * _comment;
+@property(nonatomic, strong, getter=getSubGroups) NSMutableArray * _subGroups;
+@property(nonatomic, strong, getter=getEntries) NSMutableArray * _entries;
 
 @end
 
 
-@interface Kdb4Entry: Node<KdbEntry>{
+@interface Kdb4Entry: Node<KdbEntry>
+{
 	NSString * _uuid;
 	uint32_t _image;
 	NSString * _title;
@@ -43,23 +45,27 @@
 	NSMutableDictionary * _customeAttributes;
 }
 
-@property(nonatomic, retain) NSString * _uuid;
+@property(nonatomic, strong) NSString * _uuid;
 @property(nonatomic, assign) uint32_t _image;
-@property(nonatomic, retain, getter=getEntryName, setter=setEntryName) NSString * _title;
-@property(nonatomic, retain, getter=getUserName, setter=setUserName) NSString * _username;
-@property(nonatomic, retain, getter=getPassword, setter=setPassword) NSString * _password;
-@property(nonatomic, retain, getter=getComments, setter=setComments) NSString * _comment;
-@property(nonatomic, retain, getter=getURL, setter=setURL) NSString * _url;
-@property(nonatomic, retain) NSArray * _customeAttributeKeys;
+@property(nonatomic, strong, getter=getEntryName, setter=setEntryName:) NSString * _title;
+@property(nonatomic, strong, getter=getUserName, setter=setUserName:) NSString * _username;
+@property(nonatomic, strong, getter=getPassword, setter=setPassword:) NSString * _password;
+@property(nonatomic, strong, getter=getComments, setter=setComments:) NSString * _comment;
+@property(nonatomic, strong, getter=getURL, setter=setURL:) NSString * _url;
+@property(nonatomic, strong) NSArray * _customeAttributeKeys;
+
+- (UIImage *)getIcon;
+
 @end
 
 
-@interface Kdb4Tree:Tree<KdbTree>{
+@interface Kdb4Tree:Tree<KdbTree>
+{
 	NSMutableDictionary * _meta;
 }
 
-@property(nonatomic, retain) NSMutableDictionary * _meta;
+@property(nonatomic, strong) NSMutableDictionary * _meta;
 
--(NSString *)getMetaInfo:(NSString *)key;
+- (NSString *)getMetaInfo:(NSString *)key;
 
 @end

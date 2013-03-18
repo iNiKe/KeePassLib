@@ -10,10 +10,13 @@
 #import "Node.h"
 
 /*Kdb tree*/
-@interface Tree : NSObject {
+@interface Tree : NSObject
+{
 	Node * _root;
 }
 
-@property(nonatomic, retain) Node * _root;
+@property(nonatomic, strong) Node * _root;
+
 -(void)print;
+
 @end

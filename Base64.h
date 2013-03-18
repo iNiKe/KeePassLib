@@ -9,10 +9,8 @@
 #import <Foundation/Foundation.h>
 #import "DataSource.h"
 
-@interface Base64 : NSObject  {
+@interface Base64 : NSObject
 
-}
-
-+(void)decode:(NSString *)enc to:(NSMutableData *)data;
++ (void)decode:(NSString *)enc to:(NSMutableData *)data;
 
 @end

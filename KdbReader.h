@@ -11,7 +11,7 @@
 #import "WrapperNSData.h"
 
 @protocol KdbReader<NSObject>
--(id<KdbTree>)load:(WrapperNSData *)input withPassword:(NSString *)password;
--(id<KdbTree>)getKdbTree;
+- (id<KdbTree>)load:(WrapperNSData *)input withPassword:(NSString *)password keyFile:(NSString *)keyFile;
+- (id<KdbTree>)getKdbTree;
 @end
 

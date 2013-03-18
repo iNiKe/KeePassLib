@@ -12,14 +12,16 @@
 #import "Kdb.h"
 
 /**
- Given a KDB3 Tree, Kdb3Writer persist it to hard driver
+ Given a KDB4 Tree, Kdb4Writer persist it to hard driver
  */
-@interface Kdb3Writer : NSObject
+
+@interface Kdb4Writer : NSObject
 {
-	uint8_t _header[KDB3_HEADER_SIZE];
+	uint8_t _header[KDB4_HEADER_SIZE];
 	uint8_t _encryptionIV[16];	
-	KdbPassword * _password;	
+	KdbPassword *_password;	
 }
+
 - (void)persist:(id<KdbTree>)tree file:(NSString *)fileName withPassword:(NSString *)password keyFile:(NSString *)keyFile;
 - (void)newFile:(NSString *)fileName withPassword:(NSString *)password keyFile:(NSString *)keyFile;
 

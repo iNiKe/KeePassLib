@@ -10,14 +10,15 @@
 #import "ByteBuffer.h"
 
 @interface Arc4RandomStream (PrivateMethods)
--(void)updateState;
+- (void)updateState;
 @end
 
 
 @implementation Arc4RandomStream
 
 //-(id)init:(uint8_t *)key len:(uint32_t)len input:(id<InputDataSource>)source {
--(id)init:(uint8_t *)key len:(uint32_t)len{
+- (id)init:(uint8_t *)key len:(uint32_t)len
+{
 	_i = _j = 0;
 	if(self = [super init]){
 		uint32_t index = 0;
@@ -48,14 +49,12 @@
 	return self;
 }
 
--(void)dealloc{
-	//[_source release];
-	[super dealloc];
-}
 
--(void)updateState{
+- (void)updateState
+{
 	uint8_t t = 0;
-	for (uint32_t w = 0; w < ARC_BUFFER_SIZE; w++) {
+	for (uint32_t w = 0; w < ARC_BUFFER_SIZE; w++)
+    {
 		++_i;
 		_i &= 0xff;
 		_j += _state[_i];
@@ -70,19 +69,20 @@
 	}
 }
 
--(NSString *)xor:(NSData *)data{
-	ByteBuffer * bb = [[ByteBuffer alloc]initWithSize:[data length]];	
+- (NSString *)xor:(NSData *)data
+{
+	ByteBuffer * bb = [[ByteBuffer alloc] initWithSize:[data length]];	
 	[data getBytes:bb._bytes length:bb._size];
 	
-	for(int i=0; i<bb._size; i++){
-		if(_index==0) [self updateState];				
+	for (int i=0; i<bb._size; i++)
+    {
+		if (_index==0) [self updateState];
 		(bb._bytes)[i] ^= _buffer[_index];
 		_index = (_index+1)&ARC_BUFFER_SIZE;			
 	}
 	
-	NSString * rv = [[NSString alloc]initWithBytes:bb._bytes length:bb._size encoding:NSUTF8StringEncoding];
-	[bb release];
-	return [rv autorelease];
+	NSString *rv = [[NSString alloc] initWithBytes:bb._bytes length:bb._size encoding:NSUTF8StringEncoding];
+	return rv;
 }
 
 /* 

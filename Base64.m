@@ -210,34 +210,42 @@ static const char cd64[]="|$$$}rstuvwxyz{$$$$$$$>?@ABCDEFGHIJKLMNOPQRSTUVW$$$$$$
  **
  ** decode a base64 encoded stream discarding padding, line breaks and noise
  */
-+(void)decode:(NSString *)enc to:(NSMutableData *)data{
-	unsigned char * cstr = (unsigned char *)[enc UTF8String];
++ (void)decode:(NSString *)enc to:(NSMutableData *)data
+{
+	unsigned char *cstr = (unsigned char *)[enc UTF8String];
 	int index=0, len=0, i=0;
-	unsigned char v, inb[4], outb[3];
+	unsigned char v, inb[4], outb[3]; inb[1]=0; inb[2] = 0; inb[3] = 0;
 	
-    while(cstr[index]) {
-        for( len = 0, i = 0; i < 4 && cstr[index]; i++ ) {
+    while (cstr[index])
+    {
+        for (len = 0, i = 0; i < 4 && cstr[index]; i++ )
+        {
             v = 0;
-            while(cstr[index]&&v==0) {
+            while (cstr[index]&&v==0)
+            {
                 v = (unsigned char) cstr[index++];
                 v = (unsigned char) ((v < 43 || v > 122) ? 0 : cd64[ v - 43 ]);
-                if( v ) {
+                if( v )
+                {
                     v = (unsigned char) ((v == '$') ? 0 : v - 61);
                 }
             }
 			
-			if(v) {
+			if (v)
+            {
 				len++;
 				inb[i] = (unsigned char) (v - 1);
 			}
-            else {
+            else
+            {
                 inb[i] = 0;
             }
         }
-        if( len ) {
-			outb[ 0 ] = (unsigned char ) (inb[0] << 2 | inb[1] >> 4);
-			outb[ 1 ] = (unsigned char ) (inb[1] << 4 | inb[2] >> 2);
-			outb[ 2 ] = (unsigned char ) (((inb[2] << 6) & 0xc0) | inb[3]);	
+        if (len)
+        {
+			outb[0] = (unsigned char)(inb[0] << 2 | inb[1] >> 4);
+			outb[1] = (unsigned char)(inb[1] << 4 | inb[2] >> 2);
+			outb[2] = (unsigned char)(((inb[2] << 6) & 0xc0) | inb[3]);
 			[data appendBytes:outb length:len-1];
 		}		
 	}

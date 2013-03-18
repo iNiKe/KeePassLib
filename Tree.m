@@ -16,31 +16,34 @@
 @implementation Tree
 @synthesize _root;
 
--(void)dealloc{
+- (void)dealloc
+{
 	[_root breakCyclcReference];
-	[_root release];
-	[super dealloc];
 }
 
--(void)print{
-	if(_root){
+- (void)print
+{
+	if (_root)
+    {
 		[self printTree:_root Indent:0];
 	}
 }
 
--(void)printTree:(Node *)node Indent:(int)indent{
+- (void)printTree:(Node *)node Indent:(int)indent
+{
 #ifdef DEBUG
-	NSMutableString * format = [[NSMutableString alloc]init];
-	for (int i=0; i<indent; i++){
+	NSMutableString * format = [[NSMutableString alloc] init];
+	for (int i=0; i<indent; i++)
+    {
 		[format appendString:@"\t"];
 	}
 	
 	[format appendString:@"%@"];
 	
 	NSLog(format, node);
-	[format release];
 	
-	for(Node * child in node._children){
+	for (Node *child in node._children)
+    {
 		[self printTree:child Indent:indent+1];
 	}
 #endif

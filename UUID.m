@@ -12,8 +12,10 @@ static UUID * _AES_UUID;
 
 @implementation UUID
 
--(id)init{
-	if(self=[super initWithSize:16]){
+- (id)init
+{
+	if ((self = [super initWithSize:16]))
+    {
 		CFUUIDRef uuidref = CFUUIDCreate(kCFAllocatorDefault);
 		CFUUIDBytes bytes = CFUUIDGetUUIDBytes(uuidref);
 		memcpy(_bytes, &bytes, 16);
@@ -22,8 +24,9 @@ static UUID * _AES_UUID;
 	return self;
 }
 
--(NSString *)description{
-	NSString * descr = [NSString stringWithFormat:@"%02X%02X%02X%02X-%02X%02X-%02X%02X-%02X%02X-%02X%02X%02X%02X%02X%02X", 
+- (NSString *)description
+{
+	NSString *descr = [NSString stringWithFormat:@"%02X%02X%02X%02X-%02X%02X-%02X%02X-%02X%02X-%02X%02X%02X%02X%02X%02X", 
 							_bytes[0], _bytes[1], _bytes[2], _bytes[3],
 							_bytes[4], _bytes[5],
 							_bytes[6], _bytes[7],
@@ -33,10 +36,13 @@ static UUID * _AES_UUID;
 }
 
 //AES algorithm UUID
-+(UUID*)getAESUUID{
-	@synchronized(self){
-		if(!_AES_UUID){
-			_AES_UUID = [[UUID alloc]initWithSize:16];
++ (UUID *)getAESUUID
+{
+	@synchronized(self)
+    {
+		if (!_AES_UUID)
+        {
+			_AES_UUID = [[UUID alloc] initWithSize:16];
 			_AES_UUID._bytes[0]=0x31; _AES_UUID._bytes[1]=0xC1;
 			_AES_UUID._bytes[2]=0xF2; _AES_UUID._bytes[3]=0xE6;
 			_AES_UUID._bytes[4]=0xBF; _AES_UUID._bytes[5]=0x71;

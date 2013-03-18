@@ -9,12 +9,13 @@
 #import <Foundation/Foundation.h>
 #import "DataSource.h"
 
-@interface WrapperNSData : NSObject<InputDataSource> {
+@interface WrapperNSData : NSObject<InputDataSource>
+{
 	NSData * _nsdata;
 	NSUInteger _offset;
 }
 
--initWithContentsOfMappedFile:(NSString *)filename;
--initWithNSData:(NSData *)data;
+- (id)initWithContentsOfMappedFile:(NSString *)filename;
+- (id)initWithNSData:(NSData *)data;
 
 @end

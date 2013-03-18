@@ -28,9 +28,6 @@
 	
 	id<KdbTree> rv = [self buildTree:groups levels:levels entries:entries];
 	
-	[groups release];
-	[levels release];
-	[entries release];
 	
 	return rv;
 }
@@ -60,8 +57,6 @@
 					NSString * groupTitle = [[NSString alloc]initWithCString:(const char *)buffer._bytes encoding:NSUTF8StringEncoding];
 					group._title = groupTitle;
 					//DLog(@"grouptitle: 	%@", groupTitle);
-					[groupTitle release];
-					[buffer release];
 					break;
 				}
 				case 0x0003: { 
@@ -117,29 +112,31 @@
 				break;
 			}
 		}while(true);
-		[group release];
 	}
 }
 
--(void)read:(id<InputDataSource>)input toEntries:(NSMutableArray *)entries numOfEntries:(uint32_t)numEntries withGroups:(NSArray *)groups {
+-(void)read:(id<InputDataSource>)input toEntries:(NSMutableArray *)entries numOfEntries:(uint32_t)numEntries withGroups:(NSArray *)groups
+{
 	uint16_t fieldType;
 	uint32_t fieldSize;
 	uint8_t dateBuffer[5];
 	
-	for(uint32_t curEntry=0; curEntry<numEntries; curEntry++){
+	for (uint32_t curEntry=0; curEntry<numEntries; curEntry++)
+    {
 		Kdb3Entry * entry = [[Kdb3Entry alloc]init];
-		uint32_t groupId;
-		do{
+		uint32_t groupId = 0;
+		do
+        {
 			fieldType = [Utils readInt16LE:input];		
 			fieldSize = [Utils readInt32LE:input];
 					
-			switch(fieldType){
+			switch(fieldType)
+            {
 				case 0x0000: { [input moveReadOffset:fieldSize];break; }
 				case 0x0001: { 
 					UUID * uuid = [[UUID alloc]initWithSize:fieldSize dataSource:input]; 
 					entry._uuid = uuid;
 					//DLog(@"uuid: %@", uuid);
-					[uuid release];
 					break; 
 				}
 				case 0x0002: {
@@ -163,8 +160,6 @@
 					NSString * title = [[NSString alloc]initWithCString:(const char *)buffer._bytes encoding:NSUTF8StringEncoding];
 					entry._title = title;
 					//DLog(@"title: %@", title);
-					[title release];
-					[buffer release];
 					break;
 				}
 				case 0x0005: {
@@ -172,8 +167,6 @@
 					NSString * url = [[NSString alloc]initWithCString:(const char *)buffer._bytes encoding:NSUTF8StringEncoding];
 					entry._url = url;
 					//DLog(@"url: %@", url);
-					[url release];
-					[buffer release];
 					break;
 				}
 				case 0x0006: {
@@ -181,8 +174,6 @@
 					NSString * username = [[NSString alloc]initWithCString:(const char *)buffer._bytes encoding:NSUTF8StringEncoding];
 					entry._username = username;
 					//DLog(@"username: %@", username);				
-					[username release];
-					[buffer release];
 					break;
 				}
 				case 0x0007:{
@@ -190,8 +181,6 @@
 					NSString * password = [[NSString alloc]initWithCString:(const char *)buffer._bytes encoding:NSUTF8StringEncoding];
 					entry._password = password;
 					//DLog(@"password: %@", password);				
-					[password release];
-					[buffer release];
 					break;
 				}
 				case 0x0008:{
@@ -199,8 +188,6 @@
 					NSString * comment = [[NSString alloc]initWithCString:(const char *)buffer._bytes encoding:NSUTF8StringEncoding];
 					entry._comment = comment;
 					//DLog(@"comment: %@", comment);				
-					[comment release];
-					[buffer release];
 					break;
 				}
 				case 0x0009:{
@@ -236,8 +223,6 @@
 					NSString * binaryDesc = [[NSString alloc]initWithCString:(const char *)buffer._bytes encoding:NSUTF8StringEncoding];
 					entry._binaryDesc = binaryDesc;
 					//DLog(@"binaryDesc %@", binaryDesc);
-					[binaryDesc release];
-					[buffer release];
 					break;	
 				}
 				case 0x000E:
@@ -246,7 +231,6 @@
 						MemoryBinaryContainer * container = [[MemoryBinaryContainer alloc]init];
 						[container storeBinary:input size:fieldSize];
 						entry._binary = container;
-						[container release];
 					}
 					break;
 				case 0xFFFF:{
@@ -271,7 +255,6 @@
 				break;
 			}
 		}while(true);
-		[entry release];
 	}
 }
 
@@ -287,7 +270,6 @@
 	rootGroup._title = @"$ROOT$";
 	rootGroup._parent = nil;
 	((Kdb3Tree *)tree)._root = rootGroup;
-	[rootGroup release];
 	
 	//find the parent for every group
 	for(int i=0; i<[groups count]; i++){
@@ -319,7 +301,7 @@
 		[parent addSubGroup:group];
 	}
 	
-	return [tree autorelease];
+	return tree;
 }
 
 @end

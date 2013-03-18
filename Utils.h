@@ -14,21 +14,17 @@
 #define SWAP_INT16_HOST_TO_LE(X) (CFSwapInt16HostToLittle(X))
 #define SWAP_INT32_HOST_TO_LE(X) (CFSwapInt32HostToLittle(X))
 
-#define PWM_DBSIG_1  (0x9AA2D903)
-#define PWM_DBSIG_2  (0xB54BFB66)
-#define PWM_OLD_DBSIG_1  (0x9AA2D903)
-#define PWM_OLD_DBSIG_2  (0xB54BFB65)
+#define READ_BYTES(X, Y, Z) (X = [[ByteBuffer alloc] initWithSize:Y dataSource:Z])
 
-@interface Utils : NSObject {
-}
+@interface Utils : NSObject
 
-+(ByteBuffer *) createByteBufferForString:(NSString *)string coding:(NSStringEncoding)encoding;
++ (ByteBuffer *) createByteBufferForString:(NSString *)string coding:(NSStringEncoding)encoding;
 
-+(uint8_t)readInt8LE:(id<InputDataSource>) ds;
-+(uint16_t)readInt16LE:(id<InputDataSource>) ds;
-+(uint32_t)readInt32LE:(id<InputDataSource>) ds;
-+(uint64_t)readInt64LE:(id<InputDataSource>) ds;
++ (uint8_t)readInt8LE:(id<InputDataSource>)ds;
++ (uint16_t)readInt16LE:(id<InputDataSource>)ds;
++ (uint32_t)readInt32LE:(id<InputDataSource>)ds;
++ (uint64_t)readInt64LE:(id<InputDataSource>)ds;
 
-+(BOOL)emptyString:(NSString *)str;
++ (BOOL)emptyString:(NSString *)str;
 
 @end

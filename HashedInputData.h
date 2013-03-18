@@ -10,7 +10,8 @@
 #import "DataSource.h"
 #import "ByteBuffer.h"
 
-@interface HashedInputData : NSObject <InputDataSource> {
+@interface HashedInputData : NSObject <InputDataSource>
+{
 	id <InputDataSource>  _dataSource;
 	uint32_t _blockIndex;
 	ByteBuffer * _block;
@@ -18,8 +19,8 @@
 	BOOL _eof;
 }
 
-@property (nonatomic, retain) id<InputDataSource> _dataSource;
+@property (nonatomic, strong) id<InputDataSource> _dataSource;
 
--(id)initWithDataSource:(id<InputDataSource>)input;
+- (id)initWithDataSource:(id<InputDataSource>)input;
 
 @end

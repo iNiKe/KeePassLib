@@ -9,8 +9,8 @@
 #import <Foundation/Foundation.h>
 #import "ByteBuffer.h"
 
-@interface UUID : ByteBuffer {
+@interface UUID : ByteBuffer
 
-}
-+(UUID*)getAESUUID;
++ (UUID *)getAESUUID;
+
 @end

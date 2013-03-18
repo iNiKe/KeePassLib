@@ -13,46 +13,56 @@
 @synthesize _bytes;
 @synthesize _size;
 
--(id)initWithSize:(NSUInteger)size{
-	if(self=[super init]){
+- (id)initWithSize:(NSUInteger)size
+{
+	if ((self = [super init]))
+    {
 		_size = size;
 		_bytes = calloc(_size, 1);
 	}
 	return self;
 }
 
--(id)initWithSize:(NSUInteger)size dataSource:(id<InputDataSource>)datasource{
-	if([self initWithSize:size]){
+- (id)initWithSize:(NSUInteger)size dataSource:(id<InputDataSource>)datasource
+{
+	if ((self = [self initWithSize:size]))
+    {
 		[datasource readBytes:_bytes length:_size];
 	}
 	return self;	
 }
 
--(NSString *)description{
-	NSMutableString * desc = [[NSMutableString alloc]initWithCapacity:_size];
-	for(int i=0; i<_size; i++)
+- (NSString *)description
+{
+	NSMutableString * desc = [[NSMutableString alloc] initWithCapacity:_size];
+	for (int i=0; i<_size; i++)
 		[desc appendFormat:@"%02X ", _bytes[i]];
-	return [desc autorelease];
+	return desc;
 }
 
--(void)dealloc{
+- (void)dealloc
+{
 	free(_bytes);
-	[super dealloc];
 }
 
-- (NSUInteger)hash{
+- (NSUInteger)hash
+{
 	NSUInteger result = 1;
-	for(int i=0; i<_size; i++){
+	for (int i=0; i<_size; i++)
+    {
 		result = 17*result + _bytes[i];
 	}
 	return result;
 }
 
-- (BOOL)isEqual:(id)anObject{
-	if(self==anObject) return YES;
-	if([anObject isKindOfClass:[ByteBuffer class]]&&((ByteBuffer *)anObject)._size==self._size){
+- (BOOL)isEqual:(id)anObject
+{
+	if (self==anObject) return YES;
+	if ([anObject isKindOfClass:[ByteBuffer class]]&&((ByteBuffer *)anObject)._size==self._size)
+    {
 		return memcmp(((ByteBuffer *)anObject)._bytes, self._bytes, _size)==0;
 	}
 	return NO;
 }
+
 @end

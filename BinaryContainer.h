@@ -10,9 +10,9 @@
 #import "ByteBuffer.h"
 
 @protocol BinaryContainer<NSObject>
--(void)storeBinary:(id<InputDataSource>)buffer size:(uint32_t)size;
--(uint8_t *)getBinary;
--(uint32_t)getSize;
+- (void)storeBinary:(id<InputDataSource>)buffer size:(uint32_t)size;
+- (uint8_t *)getBinary;
+- (uint32_t)getSize;
 @end
 
 /*

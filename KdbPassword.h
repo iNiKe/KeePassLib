@@ -9,16 +9,21 @@
 #import <Foundation/Foundation.h>
 #import "ByteBuffer.h"
 
-@interface KdbPassword : NSObject {
-	ByteBuffer * _masterSeed;
-	ByteBuffer * _transformSeed;	
+@interface KdbPassword : NSObject<NSXMLParserDelegate>
+{
+	ByteBuffer *_masterSeed;
+	ByteBuffer *_transformSeed;	
 	uint64_t _rounds;	
+    BOOL _isKeyfile, _isKey, _hasError;
+    NSMutableArray *_elements;
+    NSMutableData *_keyData;
 }
 
-@property(nonatomic, retain) ByteBuffer * _masterSeed;
-@property(nonatomic, retain) ByteBuffer * _transformSeed;
+@property(nonatomic, strong) ByteBuffer *_masterSeed;
+@property(nonatomic, strong) ByteBuffer *_transformSeed;
 @property(nonatomic, assign) uint64_t _rounds;
+@property (nonatomic, readonly) BOOL finished;
 
--(ByteBuffer *)createFinalKey32ForPasssword:(NSString *)password coding:(NSStringEncoding)coding kdbVersion:(uint8_t)ver;
+- (ByteBuffer *)createFinalKey32ForPasssword:(NSString *)password coding:(NSStringEncoding)coding keyFile:(NSString *)keyFile kdbVersion:(uint8_t)ver;
 
 @end

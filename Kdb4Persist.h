@@ -8,9 +8,10 @@
 
 #import <Foundation/Foundation.h>
 #import "AESEncryptSource.h"
-#import "Kdb3Node.h"
+#import "Kdb4Node.h"
 
-@interface Kdb3Persist : NSObject {
+@interface Kdb4Persist : NSObject
+{
 	id<KdbTree> _tree;
 	AESEncryptSource * _enc;
 	NSInteger _groupId;
@@ -21,4 +22,5 @@
 
 - (id)initWithTree:(id<KdbTree>)tree andDest:(AESEncryptSource *)dest;
 - (void)persist;
+
 @end

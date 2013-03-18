@@ -122,7 +122,7 @@
 	 */
 
 	Kdb3Writer * writer = [[Kdb3Writer alloc]init];
-	[writer persist:tree file:@"/Volumes/Users/qiang/Desktop/a.kdb" withPassword:@"a"];
+	[writer persist:tree file:@"/Volumes/Users/qiang/Desktop/a.kdb" withPassword:@"a" keyFile:nil];
 
 }
 
@@ -159,7 +159,7 @@
 	Kdb3Entry * e = [[Kdb3Entry alloc]initWithNewUUID];
 	e._title = title;
 	e._password = [title stringByAppendingFormat:@":password"];
-	e._url = [@"http://" stringByAppendingFormat:title];
+	e._url = [NSString stringWithFormat:@"http://%@",title];
 	e._username = [title stringByAppendingFormat:@":username"];
 	e._comment = [title stringByAppendingFormat:@":comment"];
 	[e setExpiry:nil];

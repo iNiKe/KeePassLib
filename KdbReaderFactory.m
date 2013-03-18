@@ -11,16 +11,6 @@
 #import "Kdb4Reader.h"
 #import "Utils.h"
 
-#define KDB3_SIG1 (0x9AA2D903)
-#define KDB3_SIG2 (0xB54BFB65)
-
-#define KDB4_PRE_SIG1 (0x9AA2D903)
-#define KDB4_PRE_SIG2 (0xB54BFB66)
-
-#define KDB4_SIG1 (0x9AA2D903)
-#define KDB4_SIG2 (0xB54BFB67)
-
-
 @implementation KdbReaderFactory
 
 /*
@@ -30,27 +20,33 @@
  * This function returns nil if the signatures are unknown
  *
  * The way to use this class and KDB reader is:
-   id<KdbReader> read = [KdbReaderFactory newKdbReader:input];
+   id<KdbReader> read = [KdbReaderFactory kdbReader:input];
    [read load:input withPassword:password];
    [read release];
  */
-+(id<KdbReader>)newKdbReader:(WrapperNSData *)input{
++ (id<KdbReader>)kdbReader:(WrapperNSData *)input
+{
 	uint32_t signature1 = [Utils readInt32LE:input];
 	uint32_t signature2 = [Utils readInt32LE:input];
 	
-	if(signature1==KDB3_SIG1&&signature2==KDB3_SIG2){
-		return [[Kdb3Reader alloc] init];
-	}
-	
-	if(signature1==KDB4_SIG1&&signature2==KDB4_SIG2){
-		return [[Kdb4Reader alloc]init];
-	}
-		
-	if(signature1==KDB4_PRE_SIG1&&signature2==KDB4_PRE_SIG2){
-		return [[Kdb4Reader alloc]init];
-	}
-	
-	@throw [NSException exceptionWithName:@"Unsupported" reason:@"UnsupportedVersion" userInfo:nil];
+    id<KdbReader> reader = nil;
+    if (signature1 == KEEPASS_SIG)
+    {
+        if (signature2 == KDB3_SIG2)
+        {
+            reader = [Kdb3Reader reader];
+        }
+        else if (signature2 == KDB4_SIG2 || signature2 == KDB4_PRE_SIG2)
+        {
+            reader = [Kdb4Reader reader];
+        }
+    }
+    
+    if (!reader)
+    {
+        @throw [NSException exceptionWithName:@"Unsupported" reason:@"UnsupportedVersion" userInfo:nil];
+    }
+    return reader;
 }
 
 @end

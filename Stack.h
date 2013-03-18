@@ -9,14 +9,16 @@
 #import <Foundation/Foundation.h>
 
 
-@interface Stack : NSObject {
+@interface Stack : NSObject
+{
 	NSMutableArray * _stack;
 	NSUInteger _length;
 }
 
--(void)push:(id)obj;
--(id)pop;
--(id)peek;
--(BOOL)isEmpty;
--(void)clear;
+- (void)push:(id)obj;
+- (id)pop;
+- (id)peek;
+- (BOOL)isEmpty;
+- (void)clear;
+
 @end

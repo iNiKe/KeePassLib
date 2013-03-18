@@ -18,7 +18,9 @@
 
 @implementation KDB4Tests
 
-- (void) testOpenFile {
+- (void) testOpenFile
+{
+/*
 	WrapperNSData * source = [[WrapperNSData alloc]initWithContentsOfMappedFile:@"/Volumes/Users/qiang/Desktop/abcdefg.kdbx"];
 	Kdb4Reader * kdb = [KdbReaderFactory newKdbReader:source];
 	[kdb load:source withPassword:@"abcdefg"];
@@ -26,6 +28,7 @@
 	NSLog(@"RecycleBin UUID: %@", [kdb._tree getMetaInfo:@"RecycleBinUUID"]);
 	//[self printGroup:root];
 	//[kdb release];
+*/
 }
 
 -(void)printGroup:(Kdb4Group *)group{

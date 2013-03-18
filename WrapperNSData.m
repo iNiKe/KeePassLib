@@ -10,52 +10,58 @@
 
 
 @implementation WrapperNSData
--initWithContentsOfMappedFile:(NSString *)filename{
-	if(self=[super init]){
-		_nsdata = [[NSData alloc]initWithContentsOfMappedFile:filename];
+
+- (id)initWithContentsOfMappedFile:(NSString *)filename
+{
+	if ((self = [super init]))
+    {
+		_nsdata = [[NSData alloc] initWithContentsOfMappedFile:filename];
 	}
 	return self;
 }
 
--initWithNSData:(NSData *)data{
-	if(self=[super init]){
-		_nsdata = [data retain];
+- (id)initWithNSData:(NSData *)data
+{
+	if ((self = [super init]))
+    {
+		_nsdata = data;
 	}
 	return self;
 }
 
--(void)dealloc{
-	[_nsdata dealloc];
-	[super dealloc];
-}
 
--(NSUInteger)readBytes:(void *)buffer length:(NSUInteger)length{
+- (NSUInteger)readBytes:(void *)buffer length:(NSUInteger)length
+{
 	NSRange range;
 	range.location = _offset;
 	range.length = MIN([_nsdata length]-_offset, length);
-	if(range.length) [_nsdata getBytes:buffer range:range];
+	if (range.length) [_nsdata getBytes:buffer range:range];
 	_offset += range.length;
 	return range.length;
 }
 
 
--(NSUInteger)lengthOfRemainingReadbleBytes{
+- (NSUInteger)lengthOfRemainingReadbleBytes
+{
 	return [_nsdata length]-_offset;
 }
 
--(uint8_t *)getRemainingBufferToRead{
+- (uint8_t *)getRemainingBufferToRead
+{
 	return (uint8_t *)[_nsdata bytes]+_offset;
 }
 
  
--(NSUInteger)setReadOffset:(NSUInteger) offset{
+- (NSUInteger)setReadOffset:(NSUInteger) offset
+{
 	if(offset>[_nsdata length]) offset=[_nsdata length];
 	_offset = offset;
 	return _offset;
 }
 
 
--(NSUInteger)moveReadOffset:(NSInteger) offset{
+- (NSUInteger)moveReadOffset:(NSInteger) offset
+{
 	[self setReadOffset:_offset+offset];
 	return _offset;
 }

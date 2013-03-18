@@ -9,10 +9,8 @@
 #import <Foundation/Foundation.h>
 #import "KdbReader.h"
 
-@interface KdbReaderFactory : NSObject {
+@interface KdbReaderFactory : NSObject
 
-}
-
-+(id<KdbReader>)newKdbReader:(WrapperNSData *)input;
++ (id<KdbReader>)kdbReader:(WrapperNSData *)input;
 
 @end

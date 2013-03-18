@@ -20,13 +20,6 @@
 #import "WrapperNSData.h"
 #import "KdbPassword.h"
 
-#define FLAG_SHA2	1
-#define FLAG_RIJNDAEL 2
-#define FLAG_ARCFOUR  4
-
-#define KDB3_VER  (0x00030002)
-#define KDB3_HEADER_SIZE (124)
-
 /**
  * Read a kdb3 file into a memory tree
  */
@@ -38,9 +31,11 @@
 	id<KdbTree> _tree;
 }
 
-@property(nonatomic, retain) id<KdbTree> _tree;
+@property (nonatomic, strong) id<KdbTree> _tree;
+@property (nonatomic, readonly) uint8_t major_ver, minor_ver;
 
--(id<KdbTree>)load:(WrapperNSData *)input withPassword:(NSString *)password;
+- (id<KdbTree>)load:(WrapperNSData *)input withPassword:(NSString *)password keyFile:(NSString *)keyFile;
++ (id<KdbReader>)reader;
 
 @end
 

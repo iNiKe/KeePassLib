@@ -13,14 +13,18 @@
 #import "DataSource.h"
 #import "RandomStream.h"
 
-@interface Kdb4Parser : NSObject{
-	Stack * _stack;
-	Tree * _tree;	
+@interface Kdb4Parser : NSObject
+{
+	Stack *_stack;
+	Tree *_tree;
 	id<RandomStream> _randomStream; //to decode protected value
 }
 
-@property(nonatomic, retain) id<RandomStream> _randomStream;
-@property(nonatomic, readonly) Stack * _stack;
-@property(nonatomic, retain) Tree * _tree;
--(Tree *)parse:(id<InputDataSource>)input;
+@property (nonatomic, strong) id<RandomStream> _randomStream;
+@property (nonatomic, readonly) Stack *_stack;
+@property (nonatomic, strong) Tree *_tree;
+@property (nonatomic, assign) NSUInteger groupsCount, entriesCount;
+
+- (Tree *)parse:(id<InputDataSource>)input;
+
 @end

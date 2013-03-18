@@ -12,8 +12,10 @@
 @implementation AESEncryptSource
 @synthesize _data;
 
--(id)init:(uint8_t *)keys andIV:(uint8_t *)iv{
-	if(self=[super init]){
+- (id)init:(uint8_t *)keys andIV:(uint8_t *)iv
+{
+	if ((self = [super init]))
+    {
 		_cryptorRef = nil; 
 		CCCryptorCreate(kCCEncrypt, kCCAlgorithmAES128, kCCOptionPKCS7Padding, keys, kCCKeySizeAES256, iv, &_cryptorRef);
 		CC_SHA256_Init(&_shaCtx);
@@ -22,21 +24,22 @@
 	return self;
 }
 
--(void)dealloc{
+- (void)dealloc
+{
 	CCCryptorRelease(_cryptorRef);	
-	[_data release];
-	[super dealloc];
 }
 
--(void)setData:(NSMutableData *)data{
-	if(_data!=data){
-		[_data release];
-		_data = [data retain];
+- (void)setData:(NSMutableData *)data
+{
+	if (_data != data)
+    {
+		_data = data;
 		_initDataLen = [data length];
 	}
 }
 
--(void)update:(void *)buffer size:(uint32_t)size{
+- (void)update:(void *)buffer size:(uint32_t)size
+{
 	size_t length = CCCryptorGetOutputLength(_cryptorRef, size, NO);
 	
 	ByteBuffer * bb = nil;
@@ -46,9 +49,12 @@
 	
 	//DLog(@"length-->%d", length);
 	
-	if(length<=64){
+	if (length <= 64)
+    {
 		b = _buffer;
-	}else{
+	}
+    else
+    {
 		bb = [[ByteBuffer alloc] initWithSize:size+32];
 		b = bb._bytes;
 		s = bb._size;
@@ -56,20 +62,25 @@
 	
 	CC_SHA256_Update(&_shaCtx, buffer, size);
 
-	@try{
+	@try
+    {
 		size_t movedBytes = 0;
 		CCCryptorStatus cs;		
-		if(cs=CCCryptorUpdate(_cryptorRef, buffer, size, b, s, &movedBytes)){
+		if ((cs = CCCryptorUpdate(_cryptorRef, buffer, size, b, s, &movedBytes)))
+        {
 			@throw [NSException exceptionWithName:@"EncryptError" reason:@"EncryptError" userInfo:nil];
 		};
 		[_data appendBytes:b length:movedBytes];
 		_updatedBytes += size;
-	}@finally {
-		[bb release];
+	}
+    @finally
+    {
+		bb = nil;
 	}
 }
 
--(void)final{
+- (void)final
+{
 	size_t length = CCCryptorGetOutputLength(_cryptorRef, _updatedBytes, YES);
 	uint32_t size = length - [_data length] + _initDataLen;
 	
@@ -80,9 +91,12 @@
 	uint8_t * b = nil;
 	uint32_t s = 64;
 	
-	if(size<=64){
+	if (size <= 64)
+    {
 		b = _buffer;
-	}else{
+	}
+    else
+    {
 		bb = [[ByteBuffer alloc] initWithSize:size];
 		b = bb._bytes;
 		s = bb._size;
@@ -90,19 +104,24 @@
 	
 	CC_SHA256_Final(_hash, &_shaCtx);
 	
-	@try{
+	@try
+    {
 		size_t movedBytes = 0;
 		CCCryptorStatus cs;	
-		if(cs=CCCryptorFinal(_cryptorRef, b, s, &movedBytes)){
+		if ((cs = CCCryptorFinal(_cryptorRef, b, s, &movedBytes)))
+        {
 			@throw [NSException exceptionWithName:@"EncryptError" reason:@"EncryptError" userInfo:nil];			
 		}
 		[_data appendBytes:b length:movedBytes];
-	}@finally {
-		[bb release];
+	}
+    @finally
+    {
+		bb = nil;
 	}
 }
 
--(uint8_t *)getHash{
+- (uint8_t *)getHash
+{
 	return _hash;
 }
 

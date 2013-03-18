@@ -1,38 +1,38 @@
 //
-//  Kdb3Persist.m
+//  Kdb4Writer.m
 //  KeePass2
 //
-//  Created by Qiang Yu on 2/16/10.
-//  Copyright 2010 Qiang Yu. All rights reserved.
+//  Created by Galayko Nikita on 2/16/13.
+//  Copyright 2013 Galayko Nikita. All rights reserved.
 //
 
-#import "Kdb3Writer.h"
-#import "Kdb3Node.h"
+#import "Kdb4Writer.h"
+#import "Kdb4Node.h"
 #import "Stack.h"
 #import "Utils.h"
 #import "AESEncryptSource.h"
-#import "Kdb3Persist.h"
+#import "Kdb4Persist.h"
 
 #define DEFAULT_BIN_SIZE (32*1024)
 
-@interface Kdb3Writer(PrivateMethods)
-- (uint32_t)numOfGroups:(Kdb3Group *)root;
-- (uint32_t)numOfEntries:(Kdb3Group *)root;
+@interface Kdb4Writer(PrivateMethods)
+- (uint32_t)numOfGroups:(Kdb4Group *)root;
+- (uint32_t)numOfEntries:(Kdb4Group *)root;
 - (void)initKdbPassword;
-- (void)writeHeader:(Kdb3Group *)root to:(NSMutableData *)data;
+- (void)writeHeader:(Kdb4Group *)root to:(NSMutableData *)data;
 @end
 
 
-@implementation Kdb3Writer
+@implementation Kdb4Writer
 
 /**
  * Get the number of groups in the KDB tree, including the %ROOT% node 
  * although it will not be persisted
  */
-- (uint32_t)numOfGroups:(Kdb3Group *)root
+- (uint32_t)numOfGroups:(Kdb4Group *)root
 {
 	int num = 0;
-	for (Kdb3Group * g in root._subGroups)
+	for (Kdb4Group *g in root._subGroups)
     {
 		num += [self numOfGroups:g];
 	}
@@ -43,10 +43,10 @@
  * Get the total number of entries and meta entries in the KDB tree
  *
  */
-- (uint32_t)numOfEntries:(Kdb3Group *)root
+- (uint32_t)numOfEntries:(Kdb4Group *)root
 {
-	int num = [root._entries count] + [root._metaEntries count];
-	for (Kdb3Group * g in root._subGroups)
+	int num = [root._entries count];// + [root._metaEntries count];
+	for (Kdb4Group *g in root._subGroups)
     {
 		num += [self numOfEntries:g];
 	}
@@ -83,16 +83,16 @@
 }
 
 /**
- * Write the KDB3 header
+ * Write the KDB4 header
  *
  */
-- (void)writeHeader:(Kdb3Group *)root to:(NSMutableData *)data
+- (void)writeHeader:(Kdb4Group *)root to:(NSMutableData *)data
 {
 	//Version, Flags & Version
 	*((uint32_t *)(_header)) = SWAP_INT32_HOST_TO_LE(KEEPASS_SIG);   //0..3
-	*((uint32_t *)(_header+4)) = SWAP_INT32_HOST_TO_LE(KDB3_SIG2); //4..7
+	*((uint32_t *)(_header+4)) = SWAP_INT32_HOST_TO_LE(KDB4_SIG2); //4..7
 	*((uint32_t *)(_header+8)) = SWAP_INT32_HOST_TO_LE(FLAG_SHA2|FLAG_RIJNDAEL); //8..11
-	*((uint32_t *)(_header+12)) = SWAP_INT32_HOST_TO_LE(KDB3_VER); //12..15
+	*((uint32_t *)(_header+12)) = SWAP_INT32_HOST_TO_LE(KDB4_VER); //12..15
 	
 	memcpy(_header+16, _password._masterSeed._bytes, 16); //16..31
 	memcpy(_header+32, _encryptionIV, 16);  //32..47
@@ -109,7 +109,7 @@
 	
 	memcpy(_header+88, _password._transformSeed._bytes, 32); //88..119
 	*((uint32_t *)(_header+120)) = SWAP_INT32_HOST_TO_LE(_password._rounds); //120..123	
-	[data appendBytes:_header length:KDB3_HEADER_SIZE]; 
+	[data appendBytes:_header length:KDB4_HEADER_SIZE];
 }
 
 /**
@@ -125,22 +125,23 @@
 	
 	//write the header
 	NSMutableData *data = [[NSMutableData alloc] initWithCapacity:DEFAULT_BIN_SIZE];
-	[self writeHeader:(Kdb3Group *)[tree getRoot] to:data];
+	[self writeHeader:(Kdb4Group *)[tree getRoot] to:data];
 	
 	AESEncryptSource *enc = [[AESEncryptSource alloc] init:finalKey._bytes andIV:_encryptionIV];
 	enc._data = data;
 
-	Kdb3Persist *persist = nil;
+	Kdb4Persist *persist = nil;
 	
-	@try {
-		persist = [[Kdb3Persist alloc] initWithTree:tree andDest:enc];
+	@try
+    {
+		persist = [[Kdb4Persist alloc] initWithTree:tree andDest:enc];
 		[persist persist];
 		NSRange range;
 		range.location = 56;
 		range.length = 32;
 		//backfill the content hash
 		[enc._data replaceBytesInRange:range withBytes:[enc getHash]];
-		if(![enc._data writeToFile:fileName atomically:YES])
+		if (![enc._data writeToFile:fileName atomically:YES])
         {
 			@throw [NSException exceptionWithName:@"IOError" reason:@"WriteFile" userInfo:nil];
 		}
@@ -155,7 +156,7 @@
 
 - (void)newFile:(NSString *)fileName withPassword:(NSString *)password keyFile:(NSString *)keyFile
 {
-	Kdb3Tree *tree = [Kdb3Tree newTree];
+	Kdb4Tree *tree = [[Kdb4Tree alloc] init];
 	[self persist:tree file:fileName withPassword:password keyFile:keyFile];
 }
 
